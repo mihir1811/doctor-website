@@ -1377,63 +1377,84 @@ function App() {
         </div>
       </section>
 
-      {/* Patient Journey - NEW */}
-      <section id="journey" className="journey">
-        <div className="container">
-          <div className="section-header">
-            <div className="section-badge">Your Experience</div>
-            <h2>The Patient Journey</h2>
-            <p>What to expect when you choose EliteDerm</p>
-          </div>
-          <div className="journey-timeline">
-            <div className="journey-step">
-              <div className="step-number">1</div>
-              <div className="step-content">
-                <h3>Initial Consultation</h3>
-                <p>Meet with Dr. Morgan for a comprehensive assessment of your concerns and goals. We'll review your medical history and develop a personalized treatment plan.</p>
-              </div>
-            </div>
-            <div className="journey-step">
-              <div className="step-number">2</div>
-              <div className="step-content">
-                <h3>Treatment Session</h3>
-                <p>Experience our state-of-the-art treatments in a comfortable, relaxing environment with our expert medical team ensuring your comfort and safety.</p>
-              </div>
-            </div>
-            <div className="journey-step">
-              <div className="step-number">3</div>
-              <div className="step-content">
-                <h3>Recovery & Aftercare</h3>
-                <p>Receive detailed aftercare instructions and premium products to optimize your healing and results. Our team is available to answer any questions.</p>
-              </div>
-            </div>
-            <div className="journey-step">
-              <div className="step-number">4</div>
-              <div className="step-content">
-                <h3>Follow-Up Care</h3>
-                <p>Return for scheduled follow-up appointments to monitor your progress, make any necessary adjustments to your treatment plan, and maintain your results.</p>
-              </div>
-            </div>
-          </div>
-          <div className="journey-cta">
-            <button className="btn btn-primary">Start Your Journey Today</button>
-          </div>
-        </div>
-      </section>
 
-      {/* CTA Section */}
+      {/* CTA Section - Enhanced UI */}
       <section className="cta" ref={ctaRef}>
+        <div className="cta-background"></div>
         <div className="container">
-          <h2>Transform Your Appearance Today</h2>
-          <p>Schedule your personalized consultation with Dr. Morgan and discover the most effective treatments for your unique needs.</p>
-          <div className="cta-buttons">
-            <button className="btn btn-primary">Book Your Consultation</button>
-            <button className="btn btn-outline">Call (212) 555-7890</button>
+          <div className="cta-grid">
+            <div className="cta-content">
+              <div className="section-badge">Limited Time Offer</div>
+              <h2>Transform Your Appearance Today</h2>
+              <p>Schedule your personalized consultation with Dr. Morgan and discover the most effective treatments for your unique needs.</p>
+              
+              <div className="cta-highlights">
+                <div className="highlight-item">
+                  <div className="highlight-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                  </div>
+                  <span>Same-week appointments available</span>
+                </div>
+                <div className="highlight-item">
+                  <div className="highlight-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </div>
+                  <span>Complimentary virtual consultations</span>
+                </div>
+                <div className="highlight-item">
+                  <div className="highlight-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                      <line x1="12" y1="16" x2="12" y2="16"></line>
+                      <line x1="6" y1="12" x2="6" y2="12"></line>
+                      <line x1="18" y1="12" x2="18" y2="12"></line>
+                    </svg>
+                  </div>
+                  <span>Flexible payment options</span>
+                </div>
+              </div>
+              
+              <div className="cta-buttons">
+                <button className="btn btn-primary cta-btn-primary">
+                  <span>Book Your Consultation</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </button>
+                <div className="cta-btn-divider">or</div>
+                <button className="btn btn-outline cta-btn-outline">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                  <span>Call (212) 555-7890</span>
+                </button>
+              </div>
+            </div>
+            
+            <div className="cta-image">
+              <img src="https://images.unsplash.com/photo-1611694929410-22a1db78f937?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=700&q=80" alt="Skin treatment result" />
+              <div className="cta-testimonial">
+                <div className="testimonial-stars">★★★★★</div>
+                <p>"The results exceeded my expectations. Dr. Morgan changed my life!"</p>
+                <div className="testimonial-author">— Rebecca S.</div>
+              </div>
+            </div>
           </div>
-          <div className="cta-highlight">
-            <span>✓ Same-week appointments available</span>
-            <span>✓ Complimentary virtual consultations</span>
-            <span>✓ Flexible payment options</span>
+          
+          <div className="cta-footer">
+            <div className="cta-guarantee">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>100% Satisfaction Guarantee on All Consultations</span>
+            </div>
           </div>
         </div>
       </section>
