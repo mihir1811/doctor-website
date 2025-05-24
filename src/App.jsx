@@ -1109,7 +1109,7 @@ function App() {
         </div>
       </section>
 
-      {/* Pricing Section - Updated UI */}
+      {/* Pricing Section - Enhanced UI */}
       <section id="pricing" className="pricing" ref={pricingRef}>
         <div className="container">
           <div className="section-header">
@@ -1117,7 +1117,9 @@ function App() {
             <h2>Treatment Packages</h2>
             <p>Customized solutions for your unique needs</p>
           </div>
+          
           <div className="pricing-grid">
+            {/* Basic Package */}
             <div className="pricing-card">
               <div className="pricing-header">
                 <div className="treatment-icon">✨</div>
@@ -1155,6 +1157,7 @@ function App() {
               <div className="best-for">Best for: <span>First-time patients or basic skin concerns</span></div>
             </div>
             
+            {/* Featured Package */}
             <div className="pricing-card featured">
               <div className="featured-tag">Most Popular</div>
               <div className="pricing-header">
@@ -1194,6 +1197,7 @@ function App() {
               <div className="best-for">Best for: <span>Anti-aging concerns and skin texture improvement</span></div>
             </div>
             
+            {/* Premium Package */}
             <div className="pricing-card">
               <div className="pricing-header">
                 <div className="treatment-icon">💆</div>
@@ -1231,23 +1235,11 @@ function App() {
               <div className="best-for">Best for: <span>Hair thinning and pattern baldness concerns</span></div>
             </div>
           </div>
+          
           <div className="pricing-disclaimer">
             <p>All packages include complimentary consultation. Treatment plans are customized for each patient and prices may vary. Insurance coverage available for certain medical conditions.</p>
           </div>
-          <div className="financing-options">
-            <div className="financing-option">
-              <span>🏦</span> Care Credit
-            </div>
-            <div className="financing-option">
-              <span>💳</span> Major Credit Cards
-            </div>
-            <div className="financing-option">
-              <span>💰</span> HSA/FSA Accepted
-            </div>
-            <div className="financing-option">
-              <span>📱</span> Payment Plans Available
-            </div>
-          </div>
+        
         </div>
       </section>
 
