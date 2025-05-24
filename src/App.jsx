@@ -257,6 +257,90 @@ function App() {
     }
   };
 
+  // Add this useEffect hook to handle the before/after slider functionality
+  useEffect(() => {
+    // Before/After Slider Functionality
+    const beforeAfterContainers = document.querySelectorAll('.before-after');
+    
+    beforeAfterContainers.forEach(container => {
+      const slider = container.querySelector('.comparison-slider');
+      const beforeImage = container.querySelector('.before-image');
+      
+      let isDragging = false;
+      
+      const handleDrag = (e) => {
+        if (!isDragging) return;
+        
+        const containerRect = container.getBoundingClientRect();
+        let position;
+        
+        // Check if this is a touch event or mouse event
+        if (e.type === 'touchmove') {
+          position = (e.touches[0].clientX - containerRect.left) / containerRect.width;
+        } else {
+          position = (e.clientX - containerRect.left) / containerRect.width;
+        }
+        
+        // Constrain position between 0 and 1
+        position = Math.max(0, Math.min(1, position));
+        
+        // Update slider and before image positions
+        slider.style.left = `${position * 100}%`;
+        beforeImage.style.width = `${position * 100}%`;
+      };
+      
+      const startDrag = () => {
+        isDragging = true;
+        container.classList.add('dragging');
+      };
+      
+      const endDrag = () => {
+        isDragging = false;
+        container.classList.remove('dragging');
+      };
+      
+      // Mouse events
+      container.addEventListener('mousedown', startDrag);
+      window.addEventListener('mouseup', endDrag);
+      window.addEventListener('mousemove', handleDrag);
+      
+      // Touch events
+      container.addEventListener('touchstart', startDrag);
+      window.addEventListener('touchend', endDrag);
+      window.addEventListener('touchmove', handleDrag);
+    });
+    
+    // Filter buttons functionality
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        
+        // Add active class to clicked button
+        button.classList.add('active');
+        
+        // Here you would normally filter the gallery items
+        // For example: const category = button.textContent;
+        // And then show/hide items based on category
+      });
+    });
+    
+    return () => {
+      // Clean up event listeners
+      beforeAfterContainers.forEach(container => {
+        container.removeEventListener('mousedown', startDrag);
+        container.removeEventListener('touchstart', startDrag);
+      });
+      
+      window.removeEventListener('mouseup', endDrag);
+      window.removeEventListener('mousemove', handleDrag);
+      window.removeEventListener('touchend', endDrag);
+      window.removeEventListener('touchmove', handleDrag);
+    };
+  }, []);
+
   return (
     <div className="landing-page">
       {/* Floating Appointment Button */}
@@ -790,78 +874,237 @@ function App() {
         </div>
       </section>
 
-      {/* Before/After Gallery Section */}
+      {/* Enhanced Before/After Gallery Section */}
       <section id="gallery" className="gallery">
         <div className="container">
           <div className="section-header">
-            <div className="section-badge">Visible Results</div>
+            <div className="section-badge">Real Results</div>
             <h2>Before & After Gallery</h2>
-            <p>See the remarkable results of our treatments</p>
+            <p>See the transformations our patients have experienced</p>
           </div>
+          
+          <div className="gallery-filter">
+            <button className="filter-btn active">All Results</button>
+            <button className="filter-btn">Skin Treatments</button>
+            <button className="filter-btn">Hair Restoration</button>
+            <button className="filter-btn">Laser Procedures</button>
+            <button className="filter-btn">Non-Surgical</button>
+          </div>
+          
           <div className="gallery-grid">
             <div className="gallery-item">
+              <div className="condition-tag">Acne</div>
               <div className="before-after">
                 <div className="before-image">
-                  <img src="/images/before-after/acne-before.jpg" alt="Before acne treatment" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=700&q=80" 
+                    alt="Before acne treatment" 
+                  />
                   <span className="image-label">Before</span>
                 </div>
                 <div className="after-image">
-                  <img src="/images/before-after/acne-after.jpg" alt="After acne treatment" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=700&q=80" 
+                    alt="After acne treatment" 
+                  />
                   <span className="image-label">After</span>
                 </div>
                 <div className="comparison-slider"></div>
               </div>
-              <h4>Acne Treatment</h4>
-              <p>3 months of customized medical therapy</p>
+              <div className="gallery-content">
+                <h4>Advanced Acne Treatment</h4>
+                <p>Custom medical-grade therapy combining topical treatments, laser therapy, and dietary adjustments</p>
+                <div className="treatment-info">
+                  <div className="treatment-meta">
+                    <div className="meta-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      <span>3 months</span>
+                    </div>
+                    <div className="meta-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                      </svg>
+                      <span>4 sessions</span>
+                    </div>
+                  </div>
+                  <div className="patient-profile">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Female, 24</span>
+                  </div>
+                </div>
+              </div>
             </div>
+            
             <div className="gallery-item">
+              <div className="condition-tag">Hair Loss</div>
               <div className="before-after">
                 <div className="before-image">
-                  <img src="/images/before-after/hair-before.jpg" alt="Before hair restoration" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1585751119414-ef2636f8aede?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=700&q=80" 
+                    alt="Before hair restoration" 
+                  />
                   <span className="image-label">Before</span>
                 </div>
                 <div className="after-image">
-                  <img src="/images/before-after/hair-after.jpg" alt="After hair restoration" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1618077360395-f3068be8e001?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=700&q=80" 
+                    alt="After hair restoration" 
+                  />
                   <span className="image-label">After</span>
                 </div>
                 <div className="comparison-slider"></div>
               </div>
-              <h4>Hair Restoration</h4>
-              <p>6 months after PRP treatment series</p>
+              <div className="gallery-content">
+                <h4>PRP Hair Restoration</h4>
+                <p>Combined PRP therapy with pharmaceutical treatment and laser stimulation</p>
+                <div className="treatment-info">
+                  <div className="treatment-meta">
+                    <div className="meta-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      <span>6 months</span>
+                    </div>
+                    <div className="meta-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                      </svg>
+                      <span>5 sessions</span>
+                    </div>
+                  </div>
+                  <div className="patient-profile">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Male, 38</span>
+                  </div>
+                </div>
+              </div>
             </div>
+            
             <div className="gallery-item">
+              <div className="condition-tag">Wrinkles</div>
               <div className="before-after">
                 <div className="before-image">
-                  <img src="/images/before-after/laser-before.jpg" alt="Before laser resurfacing" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1521224911436-5b591bea1a9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=700&q=80" 
+                    alt="Before skin rejuvenation" 
+                  />
                   <span className="image-label">Before</span>
                 </div>
                 <div className="after-image">
-                  <img src="/images/before-after/laser-after.jpg" alt="After laser resurfacing" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1596815064285-45ed8a9c0463?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=700&q=80" 
+                    alt="After skin rejuvenation" 
+                  />
                   <span className="image-label">After</span>
                 </div>
                 <div className="comparison-slider"></div>
               </div>
-              <h4>Laser Skin Resurfacing</h4>
-              <p>Results after 2 fractional laser treatments</p>
+              <div className="gallery-content">
+                <h4>Fractional Laser Resurfacing</h4>
+                <p>Fraxel® treatment for fine lines, wrinkles and sun damage with collagen stimulation</p>
+                <div className="treatment-info">
+                  <div className="treatment-meta">
+                    <div className="meta-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      <span>2 months</span>
+                    </div>
+                    <div className="meta-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                      </svg>
+                      <span>2 sessions</span>
+                    </div>
+                  </div>
+                  <div className="patient-profile">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Female, 52</span>
+                  </div>
+                </div>
+              </div>
             </div>
+            
             <div className="gallery-item">
+              <div className="condition-tag">Volume Loss</div>
               <div className="before-after">
                 <div className="before-image">
-                  <img src="/images/before-after/rejuvenation-before.jpg" alt="Before non-surgical rejuvenation" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1623082574892-b4dc18d6e339?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=700&q=80" 
+                    alt="Before non-surgical rejuvenation" 
+                  />
                   <span className="image-label">Before</span>
                 </div>
                 <div className="after-image">
-                  <img src="/images/before-after/rejuvenation-after.jpg" alt="After non-surgical rejuvenation" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1614251055880-ee96e4803393?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=700&q=80" 
+                    alt="After non-surgical rejuvenation" 
+                  />
                   <span className="image-label">After</span>
                 </div>
                 <div className="comparison-slider"></div>
               </div>
-              <h4>Non-Surgical Rejuvenation</h4>
-              <p>Combination of Botox and dermal fillers</p>
+              <div className="gallery-content">
+                <h4>Non-Surgical Facial Rejuvenation</h4>
+                <p>Custom combination of dermal fillers and Botox for natural-looking volume restoration</p>
+                <div className="treatment-info">
+                  <div className="treatment-meta">
+                    <div className="meta-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      <span>Immediate</span>
+                    </div>
+                    <div className="meta-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                      </svg>
+                      <span>1 session</span>
+                    </div>
+                  </div>
+                  <div className="patient-profile">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Female, 45</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+          
+          <div className="gallery-pagination">
+            <span className="page-dot active"></span>
+            <span className="page-dot"></span>
+            <span className="page-dot"></span>
+          </div>
+          
           <div className="gallery-cta">
-            <button className="btn btn-outline">View Full Gallery</button>
+            <button className="btn btn-primary">View Full Before & After Gallery</button>
           </div>
         </div>
       </section>
