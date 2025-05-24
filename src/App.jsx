@@ -9,6 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 function App() {
   // State for mobile menu
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeFaq, setActiveFaq] = useState(null);
 
   // Create refs for animated elements
   const headerRef = useRef(null);
@@ -240,8 +241,7 @@ function App() {
 
   // FAQ Toggle
   const toggleFaq = (index) => {
-    const faqItems = document.querySelectorAll('.faq-item');
-    faqItems[index].classList.toggle('active');
+    setActiveFaq(activeFaq === index ? null : index);
   };
 
   // Function to add cards to refs array
@@ -261,6 +261,9 @@ function App() {
   useEffect(() => {
     // Before/After Slider Functionality
     const beforeAfterContainers = document.querySelectorAll('.before-after');
+    
+    // Store references to all handlers so we can properly clean them up
+    const handlers = [];
     
     beforeAfterContainers.forEach(container => {
       const slider = container.querySelector('.comparison-slider');
@@ -299,22 +302,58 @@ function App() {
         container.classList.remove('dragging');
       };
       
-      // Mouse events
+      // Store the references and elements they're attached to
+      handlers.push({
+        element: container,
+        event: 'mousedown',
+        handler: startDrag
+      });
+      
+      handlers.push({
+        element: container,
+        event: 'touchstart',
+        handler: startDrag
+      });
+      
+      handlers.push({
+        element: window,
+        event: 'mouseup',
+        handler: endDrag
+      });
+      
+      handlers.push({
+        element: window,
+        event: 'mousemove',
+        handler: handleDrag
+      });
+      
+      handlers.push({
+        element: window,
+        event: 'touchend',
+        handler: endDrag
+      });
+      
+      handlers.push({
+        element: window,
+        event: 'touchmove',
+        handler: handleDrag
+      });
+      
+      // Add the event listeners
       container.addEventListener('mousedown', startDrag);
+      container.addEventListener('touchstart', startDrag);
       window.addEventListener('mouseup', endDrag);
       window.addEventListener('mousemove', handleDrag);
-      
-      // Touch events
-      container.addEventListener('touchstart', startDrag);
       window.addEventListener('touchend', endDrag);
       window.addEventListener('touchmove', handleDrag);
     });
     
     // Filter buttons functionality
     const filterButtons = document.querySelectorAll('.filter-btn');
+    const filterHandlers = [];
     
     filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
+      const clickHandler = () => {
         // Remove active class from all buttons
         filterButtons.forEach(btn => btn.classList.remove('active'));
         
@@ -324,20 +363,26 @@ function App() {
         // Here you would normally filter the gallery items
         // For example: const category = button.textContent;
         // And then show/hide items based on category
+      };
+      
+      filterHandlers.push({
+        element: button,
+        event: 'click',
+        handler: clickHandler
       });
+      
+      button.addEventListener('click', clickHandler);
     });
     
     return () => {
-      // Clean up event listeners
-      beforeAfterContainers.forEach(container => {
-        container.removeEventListener('mousedown', startDrag);
-        container.removeEventListener('touchstart', startDrag);
+      // Clean up event listeners using our stored references
+      handlers.forEach(({element, event, handler}) => {
+        element.removeEventListener(event, handler);
       });
       
-      window.removeEventListener('mouseup', endDrag);
-      window.removeEventListener('mousemove', handleDrag);
-      window.removeEventListener('touchend', endDrag);
-      window.removeEventListener('touchmove', handleDrag);
+      filterHandlers.forEach(({element, event, handler}) => {
+        element.removeEventListener(event, handler);
+      });
     };
   }, []);
 
@@ -1109,7 +1154,7 @@ function App() {
         </div>
       </section>
 
-      {/* Pricing Section - Enhanced UI */}
+      {/* Pricing Section - Fixed UI */}
       <section id="pricing" className="pricing" ref={pricingRef}>
         <div className="container">
           <div className="section-header">
@@ -1239,11 +1284,10 @@ function App() {
           <div className="pricing-disclaimer">
             <p>All packages include complimentary consultation. Treatment plans are customized for each patient and prices may vary. Insurance coverage available for certain medical conditions.</p>
           </div>
-        
         </div>
       </section>
 
-      {/* FAQ Section - NEW */}
+      {/* FAQ Section - Enhanced UI */}
       <section id="faq" className="faq" ref={faqRef}>
         <div className="container">
           <div className="section-header">
@@ -1251,66 +1295,84 @@ function App() {
             <h2>Frequently Asked Questions</h2>
             <p>Find answers to common questions about our treatments and procedures</p>
           </div>
+          
+          <div className="faq-categories">
+            <button className="faq-category active">All Questions</button>
+            <button className="faq-category">Treatments</button>
+            <button className="faq-category">Appointments</button>
+            <button className="faq-category">Insurance</button>
+            <button className="faq-category">Results & Recovery</button>
+          </div>
+          
           <div className="faq-grid">
-            <div className="faq-item" onClick={() => toggleFaq(0)}>
+            <div className={`faq-item ${activeFaq === 0 ? 'active' : ''}`} onClick={() => toggleFaq(0)}>
               <div className="faq-question">
                 <h3>How do I know which treatment is right for me?</h3>
-                <span className="faq-icon">+</span>
+                <div className="faq-icon"></div>
               </div>
               <div className="faq-answer">
                 <p>Our comprehensive consultation process helps determine the most effective treatment for your specific concerns. Dr. Morgan conducts a thorough assessment of your skin or hair condition, discusses your goals, and creates a personalized treatment plan that considers your unique characteristics and medical history.</p>
               </div>
             </div>
             
-            <div className="faq-item" onClick={() => toggleFaq(1)}>
+            <div className={`faq-item ${activeFaq === 1 ? 'active' : ''}`} onClick={() => toggleFaq(1)}>
               <div className="faq-question">
                 <h3>How many sessions will I need to see results?</h3>
-                <span className="faq-icon">+</span>
+                <div className="faq-icon"></div>
               </div>
               <div className="faq-answer">
                 <p>The number of sessions varies depending on the treatment and your individual condition. Some treatments show immediate results, while others require a series of sessions for optimal outcomes. During your consultation, Dr. Morgan will provide you with a clear timeline and expected number of sessions for your specific treatment plan.</p>
               </div>
             </div>
             
-            <div className="faq-item" onClick={() => toggleFaq(2)}>
+            <div className={`faq-item ${activeFaq === 2 ? 'active' : ''}`} onClick={() => toggleFaq(2)}>
               <div className="faq-question">
                 <h3>Are the treatments painful? What is the recovery time?</h3>
-                <span className="faq-icon">+</span>
+                <div className="faq-icon"></div>
               </div>
               <div className="faq-answer">
                 <p>We prioritize your comfort during all procedures. Most treatments involve minimal discomfort, and we utilize topical numbing agents when necessary. Recovery time varies by procedure - some have no downtime, while others may require a few days of healing. We provide detailed aftercare instructions to ensure optimal recovery and results.</p>
               </div>
             </div>
             
-            <div className="faq-item" onClick={() => toggleFaq(3)}>
+            <div className={`faq-item ${activeFaq === 3 ? 'active' : ''}`} onClick={() => toggleFaq(3)}>
               <div className="faq-question">
                 <h3>Do you accept insurance for treatments?</h3>
-                <span className="faq-icon">+</span>
+                <div className="faq-icon"></div>
               </div>
               <div className="faq-answer">
                 <p>We accept insurance for medically necessary dermatological treatments. Cosmetic procedures are typically not covered by insurance. Our administrative team can help verify your insurance coverage before treatment and discuss financing options for non-covered services.</p>
               </div>
             </div>
             
-            <div className="faq-item" onClick={() => toggleFaq(4)}>
+            <div className={`faq-item ${activeFaq === 4 ? 'active' : ''}`} onClick={() => toggleFaq(4)}>
               <div className="faq-question">
                 <h3>How do I prepare for my first appointment?</h3>
-                <span className="faq-icon">+</span>
+                <div className="faq-icon"></div>
               </div>
               <div className="faq-answer">
                 <p>For your first appointment, please arrive 15 minutes early to complete paperwork. Bring a list of current medications, any relevant medical records, and information about previous treatments. Avoid wearing makeup if you're coming for a facial treatment, and wear comfortable clothing. We recommend avoiding sun exposure for 1-2 weeks before laser treatments.</p>
               </div>
             </div>
             
-            <div className="faq-item" onClick={() => toggleFaq(5)}>
+            <div className={`faq-item ${activeFaq === 5 ? 'active' : ''}`} onClick={() => toggleFaq(5)}>
               <div className="faq-question">
                 <h3>Are the results permanent?</h3>
-                <span className="faq-icon">+</span>
+                <div className="faq-icon"></div>
               </div>
               <div className="faq-answer">
                 <p>Result longevity varies by treatment. Some procedures provide permanent results (like laser hair removal), while others require maintenance treatments to sustain results. Factors like aging, lifestyle, and sun exposure can affect longevity. We provide detailed information about expected results and maintenance recommendations during your consultation.</p>
               </div>
             </div>
+          </div>
+          
+          <div className="faq-more">
+            <a href="#">
+              View More FAQs
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
           </div>
         </div>
       </section>
